@@ -1,0 +1,563 @@
+{
+  "info": {
+    "_postman_id": "a933a7d5-2e99-4821-9d87-d80e4e150b7f",
+    "name": "AutomationExercise API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "49587185",
+    "_collection_link": "https://go.postman.co/collection/49587185-a933a7d5-2e99-4821-9d87-d80e4e150b7f?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Get All Products List",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP status is 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Body responseCode is 200 and products array is not empty\", () => {\r\n    const body = pm.response.json();\r\n    pm.expect(body.responseCode).to.eql(200);\r\n    pm.expect(body.products).to.be.an('array').that.is.not.empty;\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/productsList",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "productsList"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search Product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP status is 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"responseCode and products array contents\", () => {\r\n    const jsonD = pm.response.json();\r\n    pm.expect(jsonD.responseCode).to.eql(200);\r\n    pm.expect(jsonD.products).to.be.not.empty;\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "search_product",
+                  "value": "top"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/searchProduct",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "searchProduct"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Search Product - Missing Parameter",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP status is 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"responseCode is 400 and message property is abnormal\", () => {\r\n    const jsonData = pm.response.json();\r\n    pm.expect(jsonData.responseCode).to.eql(400);\r\n    pm.expect(jsonData.message).to.include(\"Bad request, search_product parameter is missing in POST request.\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "search_product",
+                  "value": "top",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/searchProduct",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "searchProduct"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Brands List",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP status is 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"responseCode is 200 with non-empty brands array\", () => {\r\n    const jsonD = pm.response.json();\r\n    pm.expect(jsonD.responseCode).to.equal(200);\r\n    pm.expect(jsonD.brands).to.be.an('array').that.is.not.empty;\r\n});\r\n\r\npm.test(\"first brand in the brands array has an id property and a brand property\", () => {\r\n    const jsonResp = pm.response.json();\r\n    pm.expect(jsonResp.brands[0]).to.have.property('id');\r\n    pm.expect(jsonResp.brands[0]).to.have.property('brand');\r\n});\r\n\r\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/brandsList",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "brandsList"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User Account",
+      "item": [
+        {
+          "name": "Create Account",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP status code 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"body responseCode 201 and message is User created!\", () => {\r\n    const jsonD = pm.response.json();\r\n    pm.expect(jsonD.responseCode).to.eql(201);\r\n    pm.expect(jsonD.message).to.include('User created!');\r\n});"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const uniqueEmail = `rakesh.${Date.now()}@test.com`;\r\npm.environment.set(\"testEmail\", uniqueEmail);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "name",
+                  "value": "Rakesh"
+                },
+                {
+                  "key": "email",
+                  "value": "{{testEmail}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{testPassword}}"
+                },
+                {
+                  "key": "title",
+                  "value": "Mr"
+                },
+                {
+                  "key": "birth_date",
+                  "value": "21"
+                },
+                {
+                  "key": "birth_month",
+                  "value": "December"
+                },
+                {
+                  "key": "birth_year",
+                  "value": "1996"
+                },
+                {
+                  "key": "firstname",
+                  "value": "Rakesh"
+                },
+                {
+                  "key": "lastname",
+                  "value": "Chopra"
+                },
+                {
+                  "key": "company",
+                  "value": "essentialsOrg"
+                },
+                {
+                  "key": "address1",
+                  "value": "Automation street"
+                },
+                {
+                  "key": "address2",
+                  "value": "CyberSecurity city"
+                },
+                {
+                  "key": "country",
+                  "value": "India"
+                },
+                {
+                  "key": "zipcode",
+                  "value": "123456"
+                },
+                {
+                  "key": "state",
+                  "value": "Maharashtra"
+                },
+                {
+                  "key": "city",
+                  "value": "Dhule"
+                },
+                {
+                  "key": "mobile_number",
+                  "value": "9876543210"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/createAccount",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "createAccount"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Detail By Email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP Status Code is 200\", function () { pm.response.to.have.status(200); \r\n});\r\n\r\npm.test(\"body responseCode is 200 and user object contains email property and its value equals test email from env\", () => {\r\n    const jsonD = pm.response.json();\r\n    pm.expect(jsonD.responseCode).to.eql(200);\r\n    pm.expect(jsonD.user).to.have.property('email');\r\n    pm.expect(jsonD.user.email).to.eql(pm.environment.get('testEmail'));\r\n});\r\n"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/getUserDetailByEmail?email={{testEmail}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "getUserDetailByEmail"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "{{testEmail}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Login - Valid",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP status code 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"responseCode is 200 and message User exists!\", () => {\r\n    const jsonDt = pm.response.json();\r\n    pm.expect(jsonDt.responseCode).to.eql(200);\r\n    pm.expect(jsonDt.message).to.eql(\"User exists!\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "{{testEmail}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{testPassword}}"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/verifyLogin",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "verifyLogin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Login - Invalid Password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"http status code is 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"responseCode is 404 and message is User not found!\", () => {\r\n    const jsonD = pm.response.json();\r\n    pm.expect(jsonD.responseCode).to.eql(404);\r\n    pm.expect(jsonD.message).to.eql(\"User not found!\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "{{testEmail}}"
+                },
+                {
+                  "key": "password",
+                  "value": "wrongpass123"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/verifyLogin",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "verifyLogin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Account",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP status code 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"body responseCode 200 and message is User updated!\", () => {\r\n    const jsonD = pm.response.json();\r\n    pm.expect(jsonD.responseCode).to.eql(200);\r\n    pm.expect(jsonD.message).to.include('User updated!');\r\n});\r\n"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  ""
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "name",
+                  "value": "Rakesh"
+                },
+                {
+                  "key": "email",
+                  "value": "{{testEmail}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{testPassword}}"
+                },
+                {
+                  "key": "title",
+                  "value": "Mr"
+                },
+                {
+                  "key": "birth_date",
+                  "value": "21"
+                },
+                {
+                  "key": "birth_month",
+                  "value": "December"
+                },
+                {
+                  "key": "birth_year",
+                  "value": "1996"
+                },
+                {
+                  "key": "firstname",
+                  "value": "Rakesh"
+                },
+                {
+                  "key": "lastname",
+                  "value": "Chopra"
+                },
+                {
+                  "key": "company",
+                  "value": "essentialsOrg"
+                },
+                {
+                  "key": "address1",
+                  "value": "Automation street"
+                },
+                {
+                  "key": "address2",
+                  "value": "CyberSecurity city"
+                },
+                {
+                  "key": "country",
+                  "value": "India"
+                },
+                {
+                  "key": "zipcode",
+                  "value": "123456"
+                },
+                {
+                  "key": "state",
+                  "value": "Maharashtra"
+                },
+                {
+                  "key": "city",
+                  "value": "Pune"
+                },
+                {
+                  "key": "mobile_number",
+                  "value": "9876543210"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/updateAccount",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "updateAccount"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Detail - Verify Update",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP Status Code is 200\", function () { pm.response.to.have.status(200); \r\n});\r\n\r\npm.test(\"body responseCode is 200 and user object contains email property and its value equals test email from env\", () => {\r\n    const jsonD = pm.response.json();\r\n    pm.expect(jsonD.responseCode).to.eql(200);\r\n    pm.expect(jsonD.user).to.have.property('email');\r\n    pm.expect(jsonD.user.email).to.eql(pm.environment.get('testEmail'));\r\n});\r\n\r\npm.test(\"verify city is updated to Pune\", () => {\r\n    const jsonData = pm.response.json();\r\n    pm.expect(jsonData.user.city).to.equal('Pune');\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/getUserDetailByEmail?email={{testEmail}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "getUserDetailByEmail"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "{{testEmail}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Account",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"bode responseCode is 200 and message is Account deleted!\", () => {\r\n    const jsonData = pm.response.json();\r\n    pm.expect(jsonData.responseCode).to.eql(200);\r\n    pm.expect(jsonData.message).to.eql(\"Account deleted!\");\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "{{testEmail}}"
+                },
+                {
+                  "key": "password",
+                  "value": "{{testPassword}}"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/deleteAccount",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "deleteAccount"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

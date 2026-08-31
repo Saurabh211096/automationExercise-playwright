@@ -1,0 +1,28 @@
+{
+    "validUser": {
+        "email": "saurabh123@test.com",
+        "password": "saurabh123",
+        "nameOnCard": "Saurabh Tester",
+        "cardNumberIs": "123412341234",
+        "cvc": "435",
+        "expiryMonth": "10",
+        "expiryYear": "2026"
+    },
+    "invalidUser": {
+        "email": "saurabh123@test.com",
+        "password": "wrongpassword"
+    },
+    "newUser": {
+        "name": "Auto Tester",
+        "password": "Auto@1234",
+        "firstName": "Auto",
+        "lastName": "Tester",
+        "address": "123 Automation Street",
+        "country": "India",
+        "state": "Maharashtra",
+        "city": "Pune",
+        "zipcode": "411001",
+        "mobileNumber": "9876543210"
+    },
+    "searchProduct": "Top"
+}
