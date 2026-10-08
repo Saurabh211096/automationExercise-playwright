@@ -34,16 +34,6 @@ export class CheckoutPage {
         await this.placeOrderButton.click();
     }
 
-    async fillyPaymentDetails(cardName: string, cardNumber: string, cvc: string
-        , expM: string, expY: string): Promise<void> {
-        await this.cardNameInput.fill(cardName);
-        await this.cardNumberInput.fill(cardNumber);
-        await this.cvcInput.fill(cvc);
-        await this.expMonth.fill(expM);
-        await this.expYear.fill(expY);
-        await this.payAndConfirmButton.click();
-    }
-
     async fillPaymentDetails(details: {
         cardName: string;
         cardNumber: string;
